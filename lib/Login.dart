@@ -1,5 +1,6 @@
 
-import 'package:apliee/Phoneverify.dart';
+
+import 'package:apliee/Forgotpassword.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class _LOGINState extends State<LOGIN> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _name = TextEditingController();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   bool _showPassword = false;
@@ -25,11 +27,28 @@ class _LOGINState extends State<LOGIN> {
       _showPassword = !_showPassword;
     });
   }
+
+  //signIn Method
+  _signInWithEmailAndPassword() async{
+    try{
+      final User user = (await _firebaseAuth.signInWithEmailAndPassword(
+          email: _emailController.text.trim(), password: _passwordController.text.trim())).user;
+      if(user!=null){
+        setState(() {
+          Fluttertoast.showToast(msg: "Signed In Sucessfully");
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeContent()),);
+        });
+      }
+    }catch(e){
+      Fluttertoast.showToast(msg:'Invalid User');
+    }
+  }
+
+  //Login Screen Widget
   Widget logindesgn(BuildContext context) {
-    //Screen Width and Height
+
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
     return Container(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -133,8 +152,17 @@ class _LOGINState extends State<LOGIN> {
                   ),
                 ),
               ),
+              Align(
+                alignment: Alignment.topRight,
+                child: TextButton(
+                    onPressed: ()
+                    {
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
+                         ForgotPassword()),);
+                     },
+                    child: Text("Forgot password ?",style: TextStyle(color: Colors.black),)),
+              ),
 
-              SizedBox(height:screenHeight*0.05),
               GestureDetector(
                 onTap: (){
                   if (_formKey.currentState.validate()) {
@@ -173,7 +201,7 @@ class _LOGINState extends State<LOGIN> {
                   setState(() {
                     // Navigate to Mobile verification Screen
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
-                        Enternumber()),);
+                        signUp()),);
                   });
                 },
                 child: Container(
@@ -202,31 +230,14 @@ class _LOGINState extends State<LOGIN> {
             home: Scaffold(
               backgroundColor: Colors.white,
               body: Container(
-                child: Align(
-                    alignment: Alignment.center,
-                    //loginscreen widget
-                    child: logindesgn(context)),
+                child: logindesgn(context)),
                 ),
-              ),
+
             )
     );
 
   }
 
-  //signIn Method
-  _signInWithEmailAndPassword() async{
-    try{
-      final User user = (await _firebaseAuth.signInWithEmailAndPassword(
-          email: _emailController.text.trim(), password: _passwordController.text.trim())).user;
-      if(user!=null){
-        setState(() {
-          Fluttertoast.showToast(msg: "Signed In Sucessfully");
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeContent()),);
-        });
-      }
-    }catch(e){
-      Fluttertoast.showToast(msg:'Invalid User');
-    }
-  }
+
 
 }

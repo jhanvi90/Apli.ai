@@ -1,13 +1,10 @@
 
 import 'dart:io';
-
-import 'package:apliee/UploadData.dart';
-import 'package:apliee/ImageViewScreen.dart';
 import 'package:apliee/Login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 
 class HomeContent extends StatefulWidget {
   @override
@@ -21,49 +18,31 @@ class _HomeContentState extends State<HomeContent> {
     // TODO: implement initState
     super.initState();
   }
-  static convertTimeStamp(Timestamp timestamp) {
-    assert(timestamp != null);
-    String convertedDate;
-    convertedDate = DateFormat.yMMMd().add_jm().format(timestamp.toDate());
-    return convertedDate;
-  }
+
+  //SignOut User Method
    Future _signOut()  async{
     await FirebaseAuth.instance.signOut();
 
   }
 
-  Widget Displayimage()
+
+//Home Page data display widget
+  Widget displayData()
   {
     return  StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection("user").doc(firebaseUser.uid).collection("images").orderBy("date").snapshots(),
+        stream: FirebaseFirestore.instance.collection("users").snapshots(),
         builder: (context, snapshot) {
+          final data = snapshot.requireData;
+          final name=data.docs[0]['Username'];
           if (!snapshot.hasData) {
             return Center(
-              child: Text("No images found!!"),
+              child: Text("No data found!!"),
             );
           }
           else if(snapshot.hasData){
-            final images = snapshot.data.docs;
-            List<ImageData> allImage = [];
-            for (var image in images)
-            {
-                final imageText = image.get('name');
-                final imageUrl = image.get('url');
-                final hastag = image.get('hashtag');
-                final imagedate=convertTimeStamp(image.get('date'));
-
-                final imageUI = ImageData(
-                url: imageUrl.toString(),
-                name: imageText.toString(),
-                date: imagedate.toString(),
-                hashtag: hastag.toString(),
-              );
-              allImage.add(imageUI);
-            }
-            return ListView(
-              children: allImage,
-              reverse: false,
-            );
+           return Center(
+             child: Text("Welcome $name",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600),)
+           );
           }
         });
   }
@@ -77,31 +56,19 @@ class _HomeContentState extends State<HomeContent> {
         appBar:  AppBar(
           backgroundColor: Colors.white,
           title: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-            IconButton(onPressed: (){
+              Text("Home Page",style: TextStyle(color: Colors.black),),
+            TextButton(
+                onPressed: (){
               _signOut().whenComplete(() {
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LOGIN()),);
               });
-            }, icon: Icon(Icons.logout_rounded,color: Colors.black,))
+            }, child:Text("LogOut",style: TextStyle(color: Colors.black),))
           ],),
         ),
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FloatingActionButton(
-              backgroundColor: Colors.red.withOpacity(0.7),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15.0))
-              ),
-              child: Icon(Icons.add),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => upload()),);
-              },
-            ),
-          ),
-          floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
-        body: Displayimage()
+
+        body: displayData()
       ),
     );
   }
