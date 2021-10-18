@@ -1,16 +1,12 @@
-
-
-import 'package:apliee/Forgotpassword.dart';
+import 'package:apliee/PhoneNumberVerification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'Home.dart';
-import 'SignUp.dart';
+import 'Home_Screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class LOGIN extends StatefulWidget {
-
   @override
   _LOGINState createState() => _LOGINState();
 }
@@ -18,7 +14,6 @@ class _LOGINState extends State<LOGIN> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _name = TextEditingController();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   bool _showPassword = false;
@@ -28,6 +23,7 @@ class _LOGINState extends State<LOGIN> {
     });
   }
 
+
   //signIn Method
   _signInWithEmailAndPassword() async{
     try{
@@ -36,7 +32,7 @@ class _LOGINState extends State<LOGIN> {
       if(user!=null){
         setState(() {
           Fluttertoast.showToast(msg: "Signed In Sucessfully");
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeContent()),);
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()),);
         });
       }
     }catch(e){
@@ -44,9 +40,10 @@ class _LOGINState extends State<LOGIN> {
     }
   }
 
-  //Login Screen Widget
-  Widget logindesgn(BuildContext context) {
 
+
+  // SignIn screen design widget
+  Widget LoginWidegt(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Container(
@@ -55,21 +52,11 @@ class _LOGINState extends State<LOGIN> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                child:
-                const Text("Welcome",
-                  style: TextStyle(
-                    fontSize: 30,color: Colors.red,fontWeight: FontWeight.bold
-                  ),
-                ),
+                child: Text("Welcome Back", style: TextStyle(fontSize: 30,color: Colors.red,fontWeight: FontWeight.bold),),
               ),
               SizedBox(height: screenHeight*0.01),
               Container(
-                child: Text("Login to continue",
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.red.withOpacity(0.8)
-                  ),
-                ),
+                child: Text("Login to continue",style: TextStyle(fontSize: 14, color: Colors.red.withOpacity(0.8))),
               ),
               SizedBox(height:screenHeight*0.03),
               Padding(
@@ -77,37 +64,20 @@ class _LOGINState extends State<LOGIN> {
                 child: Container(
                   child: TextFormField(
                     controller: _emailController,
-                    //validation
                     validator: (value){
                       if(value.isEmpty)
                       {
-                        return 'Please enter name';
+                        return 'Please enter email';
                       }
                       else{
                         return null;
                       }
                     },
                     decoration: InputDecoration(
-                      hintText: 'EMAIL',
-                        prefixIcon: Icon(Icons.email,color: Colors.black,),
-                        border: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        enabledBorder:  OutlineInputBorder(
-                          //borderSide:  BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        focusedBorder:OutlineInputBorder(
-                          borderSide:  BorderSide(color: Colors.black.withOpacity(0.4), width: 2.0),
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white70),
+                      hintText: 'EMAIL', prefixIcon: Icon(Icons.email,color: Colors.black),filled: true,fillColor: Colors.white70),
                   ),
                 ),
               ),
-
               SizedBox(height: screenHeight*0.01),
               Padding(
                 padding:  EdgeInsets.only(left:screenWidth*0.02,top:screenHeight*0.01,right:screenWidth*0.02 ),
@@ -115,11 +85,10 @@ class _LOGINState extends State<LOGIN> {
                   child: TextFormField(
                     controller: _passwordController,
                     obscureText: !_showPassword,
-                    //validation
                     validator: (value){
                       if(value.isEmpty)
                       {
-                        return 'Please enter name';
+                        return 'Please enter password';
                       }
                       else{
                         return null;
@@ -135,34 +104,11 @@ class _LOGINState extends State<LOGIN> {
                             _togglevisibility();
                           },
                         ),
-                        border: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        enabledBorder:  OutlineInputBorder(
-                          //borderSide:  BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        focusedBorder:OutlineInputBorder(
-                          borderSide:  BorderSide(color: Colors.black.withOpacity(0.4), width: 2.0),
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white70),
+                        filled: true, fillColor: Colors.white70),
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topRight,
-                child: TextButton(
-                    onPressed: ()
-                    {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
-                         ForgotPassword()),);
-                     },
-                    child: Text("Forgot password ?",style: TextStyle(color: Colors.black),)),
-              ),
-
+              SizedBox(height:screenHeight*0.05),
               GestureDetector(
                 onTap: (){
                   if (_formKey.currentState.validate()) {
@@ -182,34 +128,27 @@ class _LOGINState extends State<LOGIN> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text("LOG IN", style: TextStyle(color: Colors.white, fontSize: 20),),
-                        Container(
-                            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.redAccent.withOpacity(0.7)
-                            ),
+                        Container(decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.redAccent.withOpacity(0.7)),
                             child: IconButton(
                                 icon: Icon(Icons.arrow_forward_rounded,color: Colors.white,),iconSize: 25,
                                 color: Colors.black54), width: screenWidth*0.12, height: screenHeight*0.05,),
                       ]
-                  ),
-                ),
+                  )
+                )
               ),
               SizedBox(height: screenHeight*0.05),
-              const Text("Don't have an account?", style: TextStyle(fontSize: 16),
-              ),
+              Text("Don't have an account?", style: TextStyle(fontSize: 16)),
               SizedBox(height: screenHeight*0.01),
               GestureDetector(
                 onTap: () {
                   setState(() {
                     // Navigate to Mobile verification Screen
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
-                        signUp()),);
+                        Enternumber()),);
                   });
                 },
                 child: Container(
-                    child: const Text("SIGN UP NOW",
-                      style: TextStyle(
-                          color: Colors.red,fontWeight: FontWeight.bold
-                      ),
-                    )
+                    child: Text("SIGN UP NOW", style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold))
                 ),
               ),
             ]
@@ -219,9 +158,6 @@ class _LOGINState extends State<LOGIN> {
 
   @override
   Widget build(BuildContext context) {
-    //Screen Width and Height
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
     return Form(
         key: _formKey,
         child: MaterialApp(
@@ -230,14 +166,12 @@ class _LOGINState extends State<LOGIN> {
             home: Scaffold(
               backgroundColor: Colors.white,
               body: Container(
-                child: logindesgn(context)),
+                child: Align(
+                    alignment: Alignment.center,
+                    child: LoginWidegt(context)),
                 ),
-
+              ),
             )
     );
-
   }
-
-
-
 }
