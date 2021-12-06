@@ -134,23 +134,25 @@ class _HomeInvataryState extends State<HomeInvatary>
       ),
       body: Column(
         children: [
-      TextField (
-        controller: name,
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField (
+          controller: name,
      onTap: (){
-          print(datassss[0]['price']);
-       showSearch<String>(
-         context: context,
-         delegate: NameSearch(
-             datassss
-             ),
-       );
+         showSearch<String>(
+           context: context,
+           delegate: NameSearch(
+               datassss
+               ),
+         );
      },
-      decoration: InputDecoration(
-      border: InputBorder.none,
-          labelText: 'Enter Name',
-          hintText: 'Enter Your Name',
-      ),
+        decoration: InputDecoration(
+        border: InputBorder.none,
+
+            hintText: 'Serach Product',
+        ),
     ),
+      ),
       Expanded(child:productsWidegt())
     ],
       ),
