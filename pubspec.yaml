@@ -29,12 +29,8 @@ dependencies:
   http: ^0.13.3
   firebase_storage: ^10.0.1
   image_picker: ^0.8.0+4
-  fluttertoast: ^8.0.8
-  otp_text_field: ^1.1.0
-  pin_code_fields: ^7.1.0
   permission_handler: ^8.1.1
-  modal_bottom_sheet: ^2.0.0
-  validators: ^3.0.0
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -57,8 +53,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-    - assets/images/updimg.png
+  #assets:
+  #- assets/images/updimg.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
